@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #CountDown {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .TimeGroup > h1 {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="Main"></div>
+  <template id="CountdownTemplate">
+    <div id="CountDown">
+      <span class="TimeGroup">
+        <h1>{{remainingDays}}</h1>
+        <h1>Days</h1>
+      </span>
+      <span class="TimeGroup">
+        <h1>{{remainingHours}}</h1>
+        <h1>Hours</h1>
+      </span>
+      <span class="TimeGroup">
+        <h1>{{remainingMinutes}}</h1>
+        <h1>Minutes</h1>
+      </span>
+      <span class="TimeGroup">
+        <h1>{{remainingSecondes}}</h1>
+        <h1>Secondes</h1>
+      </span>
+    </div>
+  </template>
+  <script>
+    let main = document.getElementById("Main");
+    let timer;
+    let _second = 1000;
+    let _minute = _second * 60;
+    let _hour = _minute * 60;
+    let _day = _hour * 24;
+    
+    
+    const divmod = (x, y) => [Math.floor(x / y), x % y];
+
+    const template = (data) => {
+      return document.getElementById( 'CountdownTemplate' ).innerHTML.replace(
+        /{{(\w*)}}/g,
+        (m, key) => data[key]
+      )
+    }
+    
+    const buildData = (end) => {
+      let now = new Date();
+      let distanceInMilliseconds = end - now
+      
+      let [remainingDays, remainingMillisecondsAfterDays] = divmod(distanceInMilliseconds , _day);
+
+      let [remainingHours, remainingMillisecondsAfterHours]  = divmod(remainingMillisecondsAfterDays , _hour); 
+
+      let [remainingMinutes, remainingMillisecondsAfterMinutes]  = divmod(remainingMillisecondsAfterHours , _minute); 
+
+      let [remainingSecondes, remainingMillisecondsAfterSeconds]  = divmod(remainingMillisecondsAfterMinutes , _second); 
+
+      return {remainingDays, remainingHours, remainingMinutes, remainingSecondes}
+    }
+    
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+
+    const showCountDown = () => {
+      let end = new Date(params.date)
+      let data = buildData(end)
+      let countDown = template(data)
+      main.innerHTML = countDown
+    }
+    
+    showCountDown()
+    {{/*  setInterval(showCountDown, 1000)  */}}
+  </script>
+</body>
+</html>
