@@ -5,9 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     #CountDown {
       display: flex;
       flex-wrap: wrap;
+    }
+
+    .TimeGroup {
+      flex: 1 1 0px;
     }
 
     .TimeGroup > h1 {
@@ -81,7 +91,8 @@
       main.innerHTML = countDown
     }
     
-    setInterval(showCountDown, 1000)
+    showCountDown()
+    {{/*  setInterval(showCountDown, 1000)  */}}
   </script>
 </body>
 </html>
